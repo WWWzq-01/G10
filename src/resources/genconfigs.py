@@ -18,6 +18,8 @@ models = {# "Inceptionv3"   : ("Inceptionv3",       "Inceptionv3",      "Incepti
 		  # "BERT"          : ("BERT_Base",         "BERT",             "BERT_Base",      [128, 256, 384, 512, 640, 768, 1024, 1280, 1536]),
           "BERT"          : ("BERT_Base",         "BERT",             "BERT_Base",      [128, 256, 384, 512, 640, 768, 1024]),
           
+      #  "GCN"           : ("GCN",               "GCN",              "GCN",            [256, 512, 768, 1024, 1280, 1536, 1792, 2048]),
+          "GCN"           : ("GCN",               "GCN",              "GCN",            [256, 512, 768, 1024, 1280, 1536]),
           }
 policies = ["lru", "prefetch_lru", "deepUM", "FlashNeuron", "G10GDSSSD", "G10GDSFULL"] 
 cpu_policies = ["lru", "prefetch_lru", "deepUM"]
@@ -88,7 +90,7 @@ is_simulation           1
 
 {"is_transformer          1" if model in ["BERT", "VIT", "NeRF"] else ""}
 {"trans_borden            210" if model == "BERT" else "trans_borden            184" if model == "VIT" else "trans_borden            7" if model == "NeRF" else ""}
-{"is_inception            1" if model == "Inceptionv3" else  "is_resnet               1" if model == "ResNet152" or model == "ResNeXt101_32" or model == "WResNet101" else "is_senet                1"}
+{"is_gcn                  1" if model == "GCN" else "is_inception            1" if model == "Inceptionv3" else  "is_resnet               1" if model == "ResNet152" or model == "ResNeXt101_32" or model == "WResNet101" else "is_senet                1"}
 batch_size              {batch_size}
 input_H                 {299 if model == "Inceptionv3" else 224}
 input_W                 {299 if model == "Inceptionv3" else 224}

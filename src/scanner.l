@@ -83,6 +83,7 @@ eps	{return T_eps;}
 momentum	{return T_momentum;}
 affine	{return T_affine;}
 track_running_stats	{return T_track_running_stats;}
+GraphConv	{return T_GraphConv;} 
 :	{return ':';}
 =	{return '=';}
 ,	{return ',';}

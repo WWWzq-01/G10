@@ -41,7 +41,7 @@
 
 
 typedef enum {
-  Conv2d_T, ReLU_T, MaxPool2d_T, AdaptiveAvgPool2d_T, Linear_T, Dropout_T, BatchNorm2d_T, Init_T, Add_T, Concat_T, Scale_T
+  Conv2d_T, ReLU_T, MaxPool2d_T, AdaptiveAvgPool2d_T, Linear_T, Dropout_T, BatchNorm2d_T, Init_T, Add_T, Concat_T, Scale_T,GraphConv_T
 } OperatorType;
 
 

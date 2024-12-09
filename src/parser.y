@@ -56,6 +56,7 @@ void yyerror(const char *msg); // standard error-handling routine
 %token   T_Linear T_Dropout T_BatchNorm2d T_kernel_size T_stride T_padding
 %token   T_bias T_inplace T_dilation T_ceil_mode T_output_size T_in_features
 %token   T_out_features T_p T_eps T_momentum T_affine T_track_running_stats
+%token T_GraphConv
 
 
 %token   <identifier> T_Identifier

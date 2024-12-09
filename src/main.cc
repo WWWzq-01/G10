@@ -33,6 +33,7 @@ using std::chrono::high_resolution_clock;
 // Codegen param
 extern int is_resnet;
 extern int is_inception;
+extern int is_gcn;
 extern int is_senet;
 extern int batch_size;
 extern int input_H;
@@ -543,7 +544,7 @@ int main(int argc, char *argv[]) {
         if (is_input_pf_only) Assert(is_UVM);
     }
     // only one or less than one of these options are specified
-    Assert(is_resnet + is_inception + is_senet <= 1);
+    Assert(is_resnet + is_inception + is_senet + is_gcn <= 1);
 
     printf("End configs\n\n");
 

@@ -42,4 +42,5 @@ Operatorr   :   T_Conv2d '(' T_IntConstant ',' T_IntConstant ',' T_kernel_size '
             |   T_Linear '(' T_in_features '=' T_IntConstant ',' T_out_features '=' T_IntConstant ',' T_bias '=' T_BoolConstant ')'
             |   T_Dropout '(' T_p '=' T_DoubleConstant ',' T_inplace '=' T_BoolConstant ')'
             |   T_BatchNorm2d '(' T_IntConstant ',' T_eps '=' T_DoubleConstant ',' T_momentum '=' T_DoubleConstant ',' T_affine '=' T_BoolConstant ',' T_track_running_stats '=' T_BoolConstant ')'
+            |   T_GraphConv '(' T_in_features '=' T_IntConstant ',' T_out_features '=' T_IntConstant ',' T_bias '=' T_BoolConstant ')'
             ;
