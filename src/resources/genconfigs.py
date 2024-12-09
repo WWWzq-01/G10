@@ -49,7 +49,13 @@ DEFAULT_PCIE_BW = "15.754"
 DEFAULT_KERNEL_TIME_VARIATION = "0"
 DEFAULT_KERNEL_SPEEDUP_VARIATION = "1"
 
-def get_run_config_specification(model: str, netname: str, config_foldername: str, output_foldername: str, policy: str, batch_size: str, hostmem_size: str=DEFAULT_HOSTMEM_SIZE, pcie_bw : str=DEFAULT_PCIE_BW, ssd_bw : str=DEFAULT_SSD_BW, kernel_time_variation: str=DEFAULT_KERNEL_TIME_VARIATION, kernel_speedup_variation: str=DEFAULT_KERNEL_SPEEDUP_VARIATION):
+def get_run_config_specification(
+    model: str, netname: str, config_foldername: str, output_foldername: str, 
+    policy: str, batch_size: str, hostmem_size: str=DEFAULT_HOSTMEM_SIZE, 
+    pcie_bw: str=DEFAULT_PCIE_BW, ssd_bw: str=DEFAULT_SSD_BW, 
+    kernel_time_variation: str=DEFAULT_KERNEL_TIME_VARIATION, 
+    kernel_speedup_variation: str=DEFAULT_KERNEL_SPEEDUP_VARIATION
+):
   characteristics_str = ""
   if hostmem_size != DEFAULT_HOSTMEM_SIZE:
     characteristics_str += f"-cpu{hostmem_size.replace('.', '_')}"
@@ -126,7 +132,11 @@ delta_parameter         0.5
 
 
 PF_MODE = Enum("PF_MODE", ["NO_PF", "INPUT_PF", "OUTPUT_PF", "PF"])
-def get_profile_config_specification(model: str, netname: str, config_foldername: str, output_foldername: str, batch_size: str, pf_mode: Enum, is_individual: bool=False, is_cudnn: bool=True):
+
+
+def get_profile_config_specification(
+    model: str, netname: str, config_foldername: str, output_foldername: str, 
+    batch_size: str, pf_mode: Enum, is_individual: bool=False, is_cudnn: bool=True):
   pf_string = "-InputPF" if pf_mode == PF_MODE.INPUT_PF else "-OutputPF" if pf_mode == PF_MODE.OUTPUT_PF else "-PF" if pf_mode == PF_MODE.PF else ""
 
   config_name = f"{config_basefolder}/{config_foldername}/{batch_size}-profile{pf_string}.config"
