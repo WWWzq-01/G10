@@ -127,14 +127,14 @@ void Model_Layer::give_next_layer_size(int* N, int* C, int* H, int* W){
         this->scale_H = *H;
         this->scale_W = *W;
     }
-    else if (this->operatorr->type==OperatorType::GraphConv_T)
-    {
-        GraphConv* op = dynamic_cast<GraphConv*>(this->operatorr);
-        Assert(this->C==op->in_features);
-        *C = op->out_features;  // 输出特征维度变为 out_features
-        *H = 1;  // GCN 层将特征展平处理
-        *W = 1;  // 所以 H 和 W 设为 1
-    }
+    // else if (this->operatorr->type==OperatorType::GraphConv_T)
+    // {
+    //     GraphConv_T* op = dynamic_cast<GraphConv_T*>(this->operatorr);
+    //     Assert(this->C==op->in_features);
+    //     *C = op->out_features;  // 输出特征维度变为 out_features
+    //     *H = 1;  // GCN 层将特征展平处理
+    //     *W = 1;  // 所以 H 和 W 设为 1
+    // }
     
     
     else{std::cerr<<"Error Operator Type!"<<std::endl;}
@@ -822,22 +822,22 @@ void layer_first_pass_dataflow(){
             current_layer->d_input = new Tensor((long long) N*C*H*W*4);
             tensor_list.push_back(current_layer->d_input);
         }
-        else if (current_layer->operatorr->type==OperatorType::GraphConv_T) {
-            // 图卷积层需要的输入包括:
-            // 1. 节点特征矩阵 
-            // 2. 邻接矩阵
-            current_layer->input_activation = current_layer->previous_layers[0]->output_activation;
-            current_layer->adj_matrix = new Tensor((long long)N*N*4); // 邻接矩阵
-            tensor_list.push_back(current_layer->adj_matrix);
+        // else if (current_layer->operatorr->type==OperatorType::GraphConv_T) {
+        //     // 图卷积层需要的输入包括:
+        //     // 1. 节点特征矩阵 
+        //     // 2. 邻接矩阵
+        //     current_layer->input_activation = current_layer->previous_layers[0]->output_activation;
+        //     current_layer->adj_matrix = new Tensor((long long)N*N*4); // 邻接矩阵
+        //     tensor_list.push_back(current_layer->adj_matrix);
             
-            // 权重矩阵
-            current_layer->weight = new Tensor((long long)C*K*4); 
-            tensor_list.push_back(current_layer->weight);
+        //     // 权重矩阵
+        //     current_layer->weight = new Tensor((long long)C*K*4); 
+        //     tensor_list.push_back(current_layer->weight);
             
-            // 输出特征
-            current_layer->output_activation = new Tensor((long long)N*K*4);
-            tensor_list.push_back(current_layer->output_activation);
-        }
+        //     // 输出特征
+        //     current_layer->output_activation = new Tensor((long long)N*K*4);
+        //     tensor_list.push_back(current_layer->output_activation);
+        // }
         
         
     }
@@ -997,9 +997,9 @@ void CUDAKernel::print(){
                 std::cout<<"Scale";
                 break;
 
-            case OperatorType::GraphConv_T :
-                std::cout<<"GraphConv";
-                break;
+            // case OperatorType::GraphConv_T :
+            //     std::cout<<"GraphConv";
+            //     break;
 
             default:
                 break;
@@ -1186,14 +1186,14 @@ void layer_second_pass_scheduling_kernels(){
             kernel_list.back().inputs.insert(current_layer->input_activation);
             kernel_list.back().outputs.insert(current_layer->output_activation);
         }
-        else if (current_layer->operatorr->type==OperatorType::GraphConv_T) {
-            // 前向传播
-            kernel_list.emplace_back(CUDAKernelType::GraphConv_Forward, current_layer);
-            kernel_list.back().inputs.insert(current_layer->input_activation);
-            kernel_list.back().inputs.insert(current_layer->adj_matrix);
-            kernel_list.back().inputs.insert(current_layer->weight);
-            kernel_list.back().outputs.insert(current_layer->output_activation);
-        }
+        // else if (current_layer->operatorr->type==OperatorType::GraphConv_T) {
+        //     // 前向传播
+        //     kernel_list.emplace_back(CUDAKernelType::GraphConv_Forward, current_layer);
+        //     kernel_list.back().inputs.insert(current_layer->input_activation);
+        //     kernel_list.back().inputs.insert(current_layer->adj_matrix);
+        //     kernel_list.back().inputs.insert(current_layer->weight);
+        //     kernel_list.back().outputs.insert(current_layer->output_activation);
+        // }
         
     }
 
@@ -1334,28 +1334,28 @@ void layer_second_pass_scheduling_kernels(){
             kernel_list.back().inputs.insert(current_layer->d_output);
             kernel_list.back().outputs.insert(current_layer->d_input);
         }
-        else if (current_layer->operatorr->type==OperatorType::GraphConv_T) 
-        {
-            // 反向传播 - 计算权重梯度
-            kernel_list.emplace_back(CUDAKernelType::GraphConv_Backward_Weight, current_layer);
-            kernel_list.back().inputs.insert(current_layer->d_output);
-            kernel_list.back().inputs.insert(current_layer->input_activation);
-            kernel_list.back().inputs.insert(current_layer->adj_matrix);
-            kernel_list.back().outputs.insert(current_layer->d_weight);
+        // else if (current_layer->operatorr->type==OperatorType::GraphConv_T) 
+        // {
+        //     // 反向传播 - 计算权重梯度
+        //     kernel_list.emplace_back(CUDAKernelType::GraphConv_Backward_Weight, current_layer);
+        //     kernel_list.back().inputs.insert(current_layer->d_output);
+        //     kernel_list.back().inputs.insert(current_layer->input_activation);
+        //     kernel_list.back().inputs.insert(current_layer->adj_matrix);
+        //     kernel_list.back().outputs.insert(current_layer->d_weight);
 
-            // 反向传播 - 计算输入梯度
-            kernel_list.emplace_back(CUDAKernelType::GraphConv_Backward_Input, current_layer);
-            kernel_list.back().inputs.insert(current_layer->d_output);
-            kernel_list.back().inputs.insert(current_layer->weight);
-            kernel_list.back().inputs.insert(current_layer->adj_matrix);
-            kernel_list.back().outputs.insert(current_layer->d_input);
+        //     // 反向传播 - 计算输入梯度
+        //     kernel_list.emplace_back(CUDAKernelType::GraphConv_Backward_Input, current_layer);
+        //     kernel_list.back().inputs.insert(current_layer->d_output);
+        //     kernel_list.back().inputs.insert(current_layer->weight);
+        //     kernel_list.back().inputs.insert(current_layer->adj_matrix);
+        //     kernel_list.back().outputs.insert(current_layer->d_input);
 
-            // 应用梯度更新
-            kernel_list.emplace_back(CUDAKernelType::GraphConv_Apply_Grad, current_layer);
-            kernel_list.back().inputs.insert(current_layer->d_weight);
-            kernel_list.back().inputs.insert(current_layer->weight);
-            kernel_list.back().outputs.insert(current_layer->weight);
-        }
+        //     // 应用梯度更新
+        //     kernel_list.emplace_back(CUDAKernelType::GraphConv_Apply_Grad, current_layer);
+        //     kernel_list.back().inputs.insert(current_layer->d_weight);
+        //     kernel_list.back().inputs.insert(current_layer->weight);
+        //     kernel_list.back().outputs.insert(current_layer->weight);
+        // }
         
     }
 }

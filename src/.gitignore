@@ -8,3 +8,7 @@ y.output
 y.tab.c
 y.tab.h
 *.txt
+/VIT
+/BERT_Base
+/GCN
+/Inceptionv3
